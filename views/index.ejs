@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('head') -%>
+<body>
+    <%- include('navbar') -%>
+    <div class="container">
+        <h1>Welcome to Freight Quotations</h1>
+        <h4>Please enter your address below</h4>
+        <form action="/locations" method="post">
+            <label for="address1">Origin address</label>
+            <input type="text" id="address1" name="address1" value="">
+            <label for="address2">Destination address</label>
+            <input type="text" id="address2" name="address2" value="">
+            <input type="submit" value="Find">
+          </form> 
+    </div>
+    <%- include('footer') -%>
+</body>
+</html>
