@@ -19,6 +19,7 @@
  import fetch from 'node-fetch';
  import {connectDB} from "./db.js"
  import colors from 'colors';
+ import Airport from "./models/Airport.js";
 /**
  * App Variables
  */
@@ -30,6 +31,18 @@
  *  Connect to database
  */
   connectDB();
+
+/**
+ *  Get lufthansa token
+ */
+  // let token;
+  // const lufthansaToken = fetch('https://api.lufthansa.com/v1/oauth/token', {
+  //     method: 'POST',
+  //     body: "client_id=6r8rabnjj3jfpecqdrxuzakr&client_secret=svN6gYUaQtCPBH2QrVDB&grant_type=client_credentials",
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded'
+  //     }
+  //   }).then(response => response.json()).then((response) => {token = response["access_token"]});
 
 /**
  *  App Configuration
@@ -56,6 +69,8 @@ app.post('/locations', (req, res, next) => {
 
     const fetchReq2 = fetch(`http://api.positionstack.com/v1/forward?access_key=d72e69a8463cf82bca1f032eb79c805f&query=${req.body.address2}`)
     .then(response => response.json())
+
+     
     
     
     const coordData = Promise.all([fetchReq1, fetchReq2]);
@@ -72,16 +87,20 @@ app.post('/locations', (req, res, next) => {
       let continent2 = response[1]['data'][0]['continent'];
       //console.log(continent1);
 
+
+
       const fetchReq3 = fetch(`https://api.lufthansa.com/v1/references/airports/nearest/${lat1},${long1}`, {
            headers: {
-             'Authorization': 'Bearer wdd4jx3k4f7b9k38ucb2henv',
+             //'Authorization': `Bearer ${token}`,
+             'Authorization': `Bearer ahtpdb5rc66mu8educmg6h7a`,
              'Accept': 'application/json'
            }
            }).then(response => response.json())
 
       const fetchReq4 = fetch(`https://api.lufthansa.com/v1/references/airports/nearest/${lat2},${long2}`, {
             headers: {
-              'Authorization': 'Bearer wdd4jx3k4f7b9k38ucb2henv',
+              //'Authorization': `Bearer ${token}`,
+              'Authorization': `Bearer ahtpdb5rc66mu8educmg6h7a`,
               'Accept': 'application/json'
             }
             }).then(response => response.json())
@@ -94,6 +113,12 @@ app.post('/locations', (req, res, next) => {
         
        let distance1 = response2[0]["NearestAirportResource"]["Airports"]["Airport"][0]["Distance"]["Value"];
        let distance2 = response2[1]["NearestAirportResource"]["Airports"]["Airport"][0]["Distance"]["Value"];
+
+       global.destAirport = response2[1]["NearestAirportResource"]["Airports"]["Airport"][0]["AirportCode"];
+
+       //global.destAirport = destAirport;
+       global.pickupKM = distance1;
+       global.dropoffKM = distance2;
 
         let price1, price2;
         switch(continent1) {
@@ -144,6 +169,20 @@ app.post('/locations', (req, res, next) => {
     
     
  });
+
+ app.post('/total', async (req, res, next) => {
+      let VW = (parseInt(req.body.height) * parseInt(req.body.width) * parseInt(req.body.length))/6000;
+      let CW = Math.max(VW, parseInt(req.body.weight));
+
+      console.log(VW);
+      console.log(CW);
+      console.log(destAirport);
+
+      const airport = await Airport.find({CODE:"OTP"});
+      console.log(airport);
+     
+ });
+
 
 /**
  * Server Activation

@@ -9,8 +9,26 @@
         <p>There are <%= distance1 %> km to the airport, amounting to a price of <%= price1 %></p>
         <h5>Nearest airport to destination:<%= airport2 %></h5>
         <p>There are <%= distance2 %> km to the airport, amounting to a price of <%= price2 %></p>
-        
+
+        <form id="form" action="/total" method="post">
+            <fieldset>
+                <legend>Package:</legend>
+                <label for="height">Height</label>
+                <input type="number" id="height" name="height" value="">
+                <label for="width">Width</label>
+                <input type="number" id="width" name="width" value="">
+                <label for="length">Length</label>
+                <input type="number" id="length" name="length" value="">
+                <label for="weight">Weight</label>
+                <input type="number" id="weight" name="weight" value="">
+            </fieldset>
+            <input type="submit" value="Calculate">
+            
+        </form> 
+        <button id="btn">ADD FIELDSET</button>
+        <!-- onClick="add_fieldset()" -->
     </div>
     <%- include('footer') -%>
+    <script src="script.js"></script>
 </body>
 </html>

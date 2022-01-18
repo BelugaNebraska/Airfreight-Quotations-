@@ -2,4 +2,11 @@
 /* Body */
 
 /* Footer */
+.container{
+    height:auto;
+}
+
+#btn{
+    margin-bottom: 30%;
+}
 
