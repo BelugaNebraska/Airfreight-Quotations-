@@ -35,14 +35,14 @@
 /**
  *  Get lufthansa token
  */
-  // let token;
-  // const lufthansaToken = fetch('https://api.lufthansa.com/v1/oauth/token', {
-  //     method: 'POST',
-  //     body: "client_id=6r8rabnjj3jfpecqdrxuzakr&client_secret=svN6gYUaQtCPBH2QrVDB&grant_type=client_credentials",
-  //     headers: {
-  //       'Content-Type': 'application/x-www-form-urlencoded'
-  //     }
-  //   }).then(response => response.json()).then((response) => {token = response["access_token"]});
+  let token;
+  const lufthansaToken = fetch('https://api.lufthansa.com/v1/oauth/token', {
+      method: 'POST',
+      body: "client_id=6r8rabnjj3jfpecqdrxuzakr&client_secret=svN6gYUaQtCPBH2QrVDB&grant_type=client_credentials",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(response => response.json()).then((response) => {token = response["access_token"]});
 
 /**
  *  App Configuration
@@ -91,16 +91,16 @@ app.post('/locations', (req, res, next) => {
 
       const fetchReq3 = fetch(`https://api.lufthansa.com/v1/references/airports/nearest/${lat1},${long1}`, {
            headers: {
-             //'Authorization': `Bearer ${token}`,
-             'Authorization': `Bearer ahtpdb5rc66mu8educmg6h7a`,
+             'Authorization': `Bearer ${token}`,
+             //'Authorization': `Bearer ahtpdb5rc66mu8educmg6h7a`,
              'Accept': 'application/json'
            }
            }).then(response => response.json())
 
       const fetchReq4 = fetch(`https://api.lufthansa.com/v1/references/airports/nearest/${lat2},${long2}`, {
             headers: {
-              //'Authorization': `Bearer ${token}`,
-              'Authorization': `Bearer ahtpdb5rc66mu8educmg6h7a`,
+              'Authorization': `Bearer ${token}`,
+              //'Authorization': `Bearer ahtpdb5rc66mu8educmg6h7a`,
               'Accept': 'application/json'
             }
             }).then(response => response.json())
@@ -174,13 +174,23 @@ app.post('/locations', (req, res, next) => {
       let VW = (parseInt(req.body.height) * parseInt(req.body.width) * parseInt(req.body.length))/6000;
       let CW = Math.max(VW, parseInt(req.body.weight));
 
-      console.log(VW);
+      //console.log(VW);
       console.log(CW);
-      console.log(destAirport);
+      //console.log(destAirport);
 
       const airport = await Airport.find({CODE:"OTP"});
-      console.log(airport);
-     
+      //console.log(airport);
+      const basic = airport[0]['RATE']["GEN, DG OK PAX"]["N"];
+      const freight =parseInt(basic) * CW;
+      console.log(freight);
+      const total = parseInt(global.pickupKM) * 10 + freight + parseInt(global.dropoffKM) * 10;
+      console.log(total);
+
+      res.render('total', { 
+        cw: CW,
+        airfreight: freight,
+        total: total
+     });
  });
 
 

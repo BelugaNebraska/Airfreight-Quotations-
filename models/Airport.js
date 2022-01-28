@@ -3,11 +3,11 @@ const { Schema } = mongoose;
 
 const airportSchema = new Schema(
     {
-        code: { type: String, required: [true, 'airport code is required'], unique: true },
-        destination: String, 
-        rate: Object
+        CODE: { type: String, required: [true, 'airport code is required'], unique: true },
+        DESTINATION: String, 
+        RATE: Object
     }
 );
 
-export default mongoose.model("Airport", airportSchema);
+export default mongoose.model("Airport", airportSchema, "turkish");
 
